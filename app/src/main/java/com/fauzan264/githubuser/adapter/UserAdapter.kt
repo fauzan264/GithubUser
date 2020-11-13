@@ -1,45 +1,49 @@
 package com.fauzan264.githubuser.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.fauzan264.githubuser.R
 import com.fauzan264.githubuser.model.User
-import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.android.synthetic.main.item_user.view.*
 
-class UserAdapter internal constructor(private val context: Context): BaseAdapter() {
-    internal var users = arrayListOf<User>()
-    override fun getCount(): Int = users.size
+class UserAdapter(private val listUser: ArrayList<User>) : RecyclerView.Adapter<UserAdapter.ListViewHolder>() {
+    private var onItemClickCallback: OnItemClickCallback? = null
 
-    override fun getItem(i: Int): Any = users[i]
-
-    override fun getItemId(i: Int): Long = i.toLong()
-
-    override fun getView(position: Int, view: View?, viewGroup: ViewGroup?): View {
-        var itemView = view
-        if (itemView == null) {
-            itemView = LayoutInflater.from(context).inflate(R.layout.item_user, viewGroup, false)
-        }
-
-        val viewHolder = ViewHolder(itemView as View)
-
-        val user = getItem(position) as User
-        viewHolder.bind(user)
-        return itemView
+    fun setOneItemClickCallback(onItemClickCallback: OnItemClickCallback) {
+        this.onItemClickCallback = onItemClickCallback
     }
 
-    private inner class ViewHolder constructor(view: View) {
-        private val txtName: TextView = view.findViewById(R.id.list_txt_name)
-        private val txtLocation: TextView = view.findViewById(R.id.list_txt_location)
-        private val imgPhoto: CircleImageView = view.findViewById(R.id.list_img_photo)
+    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ListViewHolder {
+        val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.item_user, viewGroup, false)
+        return ListViewHolder(view)
+    }
 
-        internal fun bind(user: User) {
-            txtName.text = user.name
-            txtLocation.text = user.location
-            imgPhoto.setImageResource(user.photo)
+    override fun onBindViewHolder(holder: ListViewHolder, position: Int) = holder.bind(listUser[position])
+
+    override fun getItemCount(): Int = listUser.size
+
+
+    inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bind(user: User){
+            with(itemView) {
+                Glide.with(itemView.context)
+                    .load(user.photo)
+                    .apply(RequestOptions().override(55,55))
+                    .into(list_img_photo)
+
+                list_txt_name.text = user.name
+                list_txt_location.text = user.location
+
+                itemView.setOnClickListener{ onItemClickCallback?.onItemClicked(user)}
+            }
         }
+    }
+
+    interface OnItemClickCallback {
+        fun onItemClicked(data: User)
     }
 }

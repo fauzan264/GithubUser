@@ -1,72 +1,69 @@
 package com.fauzan264.githubuser
 
 import android.content.Intent
-import android.content.res.TypedArray
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.AdapterView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.fauzan264.githubuser.adapter.UserAdapter
 import com.fauzan264.githubuser.model.User
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var adapter: UserAdapter
-    private lateinit var dataName: Array<String>
-    private lateinit var dataLocation: Array<String>
-    private lateinit var dataPhoto: TypedArray
-    private lateinit var dataCompany: Array<String>
-    private lateinit var dataUsername: Array<String>
-    private lateinit var dataFollowers: Array<String>
-    private lateinit var dataFollowing: Array<String>
-    private lateinit var dataRepo: Array<String>
-
-    private var users = arrayListOf<User>()
+    private val list = ArrayList<User>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        adapter = UserAdapter(this)
-        lv_list.adapter = adapter
+        rv_list.setHasFixedSize(true)
 
-        prepare()
-        addItem()
-
-        lv_list.onItemClickListener = AdapterView.OnItemClickListener{ _, _, position, _->
-            val moveDetail = Intent(this@MainActivity, DetailActivity::class.java)
-            moveDetail.putExtra(DetailActivity.EXTRA_USER, users[position])
-            startActivity(moveDetail)
-        }
+        list.addAll(getListUser())
+        showRecyclerList()
     }
 
-    private fun prepare() {
-        dataName = resources.getStringArray(R.array.name)
-        dataLocation = resources.getStringArray(R.array.location)
-        dataPhoto = resources.obtainTypedArray(R.array.avatar)
-        dataCompany = resources.getStringArray(R.array.company)
-        dataUsername = resources.getStringArray(R.array.username)
-        dataFollowers = resources.getStringArray(R.array.followers)
-        dataFollowing = resources.getStringArray(R.array.following)
-        dataRepo = resources.getStringArray(R.array.repository)
+    private fun getListUser(): ArrayList<User> {
+        val dataPhoto = resources.obtainTypedArray(R.array.avatar)
+        val dataName = resources.getStringArray(R.array.name)
+        val dataLocation = resources.getStringArray(R.array.location)
+        val dataCompany = resources.getStringArray(R.array.company)
+        val dataUsername = resources.getStringArray(R.array.username)
+        val dataFollowers = resources.getStringArray(R.array.followers)
+        val dataFollowing = resources.getStringArray(R.array.following)
+        val dataRepo = resources.getStringArray(R.array.repository)
 
-    }
-
-    private fun addItem() {
-        for (position in dataName.indices) {
+        val listUser = ArrayList<User>()
+        for (pos in dataName.indices) {
             val user = User(
-                dataPhoto.getResourceId(position, -1),
-                dataName[position],
-                dataLocation[position],
-                dataCompany[position],
-                dataUsername[position],
-                dataFollowers[position],
-                dataFollowing[position],
-                dataRepo[position]
+                dataPhoto.getResourceId(pos, -1),
+                dataName[pos],
+                dataLocation[pos],
+                dataCompany[pos],
+                dataUsername[pos],
+                dataFollowers[pos],
+                dataFollowing[pos],
+                dataRepo[pos]
             )
-            users.add(user)
+            listUser.add(user)
         }
-        adapter.users = users
+        return listUser
     }
 
+    private fun showRecyclerList() {
+        rv_list.layoutManager = LinearLayoutManager(this)
+        val listUserAdapter = UserAdapter(list)
+        rv_list.adapter = listUserAdapter
+
+        listUserAdapter.setOneItemClickCallback(object : UserAdapter.OnItemClickCallback{
+            override fun onItemClicked(data: User) {
+                showSelectedUser(data)
+            }
+        })
+    }
+
+    private fun showSelectedUser(user: User) {
+        val moveDetail = Intent(this@MainActivity, DetailActivity::class.java)
+        moveDetail.putExtra(DetailActivity.EXTRA_USER, user)
+        startActivity(moveDetail)
+    }
 }
