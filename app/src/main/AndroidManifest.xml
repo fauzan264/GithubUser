@@ -9,11 +9,12 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/github_user"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity"/>
         <activity
             android:name=".DetailActivity"
-            android:label="Detail User"
+            android:label="@string/detail_user"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".SplashScreen">
             <intent-filter>
