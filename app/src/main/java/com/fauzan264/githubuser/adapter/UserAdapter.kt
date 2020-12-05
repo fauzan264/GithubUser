@@ -41,7 +41,7 @@ class UserAdapter : RecyclerView.Adapter<UserAdapter.ListViewHolder>() {
     inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(listItems: User) {
             with(itemView) {
-                Glide.with(itemView.context)
+                Glide.with(context)
                     .load(listItems.photo)
                     .apply(RequestOptions().override(55,55))
                     .into(list_img_photo)

@@ -32,7 +32,7 @@ class FollowersAdapter : RecyclerView.Adapter<FollowersAdapter.FollowersViewHold
     inner class FollowersViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView) {
         fun bind(followers: Followers) {
             with(itemView) {
-                Glide.with(itemView.context)
+                Glide.with(context)
                     .load(followers.photo)
                     .apply(RequestOptions().override(40,40))
                     .into(list_img_followers)

@@ -53,20 +53,12 @@ class DetailActivity : AppCompatActivity() {
                 val result = String(responseBody)
                 val responseObject = JSONObject(result)
 
-                val user = User()
-                user.name = responseObject.getString("name")
-                user.location = responseObject.getString("location")
-                user.company = responseObject.getString("company")
-                user.followers = responseObject.getString("followers")
-                user.following = responseObject.getString("following")
-                user.repo = responseObject.getString("public_repos")
-
-                tv_name.text = user.name
-                tv_location.text = user.location
-                tv_company.text = user.company
-                tv_followers.text = user.followers
-                tv_following.text = user.following
-                tv_repo.text = user.repo
+                tv_name.text = responseObject.getString("name")
+                tv_location.text = responseObject.getString("location")
+                tv_company.text = responseObject.getString("company")
+                tv_followers.text = responseObject.getString("followers")
+                tv_following.text = responseObject.getString("following")
+                tv_repo.text = responseObject.getString("public_repos")
             }
 
             override fun onFailure(statusCode: Int, headers: Array<out Header>?, responseBody: ByteArray?, error: Throwable) {

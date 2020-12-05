@@ -16,7 +16,7 @@
             android:name=".DetailActivity"
             android:label="@string/detail_user"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".SplashScreen">
+        <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
