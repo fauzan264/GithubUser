@@ -17,7 +17,7 @@ class FollowersViewModel : ViewModel() {
     internal fun setFollowers(username: String) {
         val listItems = ArrayList<Followers>()
 
-        val apiKey = "token cc1a12cad98f867dbe87ab463bf49697a0f87045"
+        val apiKey = "token ${BuildConfig.API_KEY}"
         val url = "https://api.github.com/users/${username}/followers"
 
         val client = AsyncHttpClient()
