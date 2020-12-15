@@ -3,6 +3,7 @@ package com.fauzan264.githubuser
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
@@ -14,13 +15,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.fauzan264.githubuser.adapter.UserAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import android.widget.SearchView.OnQueryTextListener
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.fauzan264.githubuser.model.User
 
 class MainActivity : AppCompatActivity() {
         private lateinit var adapter: UserAdapter
         private lateinit var mainViewModel: MainViewModel
+        private lateinit var sweetAlertDialog: SweetAlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,10 +33,9 @@ class MainActivity : AppCompatActivity() {
         rv_list.layoutManager   = LinearLayoutManager(this)
         rv_list.adapter         = adapter
         mainViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(MainViewModel::class.java)
-        mainViewModel.getUsers().observe(this, Observer { userItems ->
+        mainViewModel.getUsers().observe(this, { userItems ->
             if (userItems.isNotEmpty()) {
                 showMainImage(false)
-                showNotFound(false)
                 adapter.setData(userItems)
                 showLoading(false)
                 showRecyclerList()
@@ -42,7 +43,9 @@ class MainActivity : AppCompatActivity() {
                 showMainImage(false)
                 adapter.setData(userItems)
                 showRecyclerList()
-                showNotFound(true)
+                showLoading(false)
+                showNotFound()
+
             }
         })
     }
@@ -59,7 +62,6 @@ class MainActivity : AppCompatActivity() {
         searchView.setOnQueryTextListener(object : OnQueryTextListener{
             override fun onQueryTextSubmit(username: String): Boolean {
                 showMainImage(false)
-                showNotFound(false)
                 showLoading(true)
                 mainViewModel.setUser(username)
                 return true
@@ -84,20 +86,21 @@ class MainActivity : AppCompatActivity() {
 
     fun showLoading(state: Boolean) {
         if (state) {
-            progressBar.visibility = View.VISIBLE
+            sweetAlertDialog = SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE)
+            sweetAlertDialog.progressHelper.barColor = Color.parseColor("#800000")
+            sweetAlertDialog.titleText = getString(R.string.loading)
+            sweetAlertDialog.setCancelable(true)
+            sweetAlertDialog.show()
         } else {
-            progressBar.visibility = View.GONE
+            sweetAlertDialog.dismiss()
         }
     }
 
-    private fun showNotFound(state: Boolean) {
-        if (state) {
-            img_not_found.visibility = View.VISIBLE
-            txt_not_found.visibility = View.VISIBLE
-        } else {
-            img_not_found.visibility = View.GONE
-            txt_not_found.visibility = View.GONE
-        }
+    private fun showNotFound() {
+        SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+            .setTitleText(R.string.not_found)
+            .setContentText(getString(R.string.username_not_found))
+            .show()
     }
 
     fun showMainImage(state: Boolean) {

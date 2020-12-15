@@ -14,5 +14,7 @@
     <string name="search">Search</string>
     <string name="change_language_settings">Change Language Settings</string>
     <string name="search_username">Search Username</string>
+    <string name="loading">Loading...</string>
+    <string name="not_found">Not Found</string>
     <string name="username_not_found">Username Not Found</string>
 </resources>

@@ -14,6 +14,8 @@
     <string name="search_hint">Masukan Nama Pengguna</string>
     <string name="search">Cari</string>
     <string name="change_language_settings">Ubah Pengaturan Bahasa</string>
+    <string name="loading">Memuat...</string>
+    <string name="not_found">Tidak ditemukan</string>
     <string name="username_not_found">Nama Pengguna Tidak Ditemukan</string>
     <string name="search_username">Cari Nama Pengguna</string>
 </resources>
